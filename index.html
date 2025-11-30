@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免费在线图片处理工具 - 压缩、裁剪、格式转换、滤镜效果，一键处理图片">
+    <meta name="keywords" content="图片处理,图片压缩,图片裁剪,格式转换,在线图片工具">
+    <title>图片处理工具 - 免费在线图片编辑</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="10" y="10" width="80" height="80" rx="8" fill="url(#logoGradient)" opacity="0.2"/>
+                    <rect x="20" y="20" width="60" height="60" rx="6" fill="url(#logoGradient)"/>
+                    <circle cx="35" cy="35" r="8" fill="white" opacity="0.9"/>
+                    <circle cx="65" cy="35" r="8" fill="white" opacity="0.9"/>
+                    <path d="M 30 55 Q 50 65 70 55" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.9"/>
+                </svg>
+            </div>
+            <h1>图片处理工具</h1>
+            <p class="subtitle">免费在线图片编辑 - 压缩、裁剪、格式转换、滤镜效果</p>
+        </header>
+
+        <!-- 图片上传区域 -->
+        <section class="upload-section">
+            <div class="upload-area" id="upload-area">
+                <div class="upload-content">
+                    <svg class="upload-icon" width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="uploadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="3" y="3" width="18" height="18" rx="3" fill="url(#uploadGradient)" opacity="0.1"/>
+                        <path d="M12 8V16M8 12L12 8L16 12" stroke="url(#uploadGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 15V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V15" stroke="url(#uploadGradient)" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>点击或拖拽图片到这里</h3>
+                    <p>支持 JPG、PNG、GIF、WEBP 格式</p>
+                    <input type="file" id="image-input" accept="image/*" multiple>
+                </div>
+            </div>
+            <div class="batch-upload-info" id="batch-info" style="display: none;">
+                <p>已选择 <span id="file-count">0</span> 张图片</p>
+            </div>
+        </section>
+
+        <!-- 图片预览和编辑区域 -->
+        <section class="editor-section" id="editor-section" style="display: none;">
+            <div class="editor-header">
+                <h2>图片编辑</h2>
+                <button onclick="reSelectImage()" class="reselect-btn">🔄 重新选择图片</button>
+            </div>
+            <div class="editor-layout">
+                <!-- 左侧：编辑工具 -->
+                <div class="tools-panel">
+                    <h3>编辑工具</h3>
+                    
+                    <!-- 基础工具 -->
+                    <div class="tool-group">
+                        <h4>📐 基础调整</h4>
+                        <div class="tool-buttons">
+                            <button onclick="compressImage()" class="tool-btn">
+                                <span>🗜️</span> 压缩图片
+                            </button>
+                            <button onclick="showResizePanel()" class="tool-btn">
+                                <span>📏</span> 调整尺寸
+                            </button>
+                            <button onclick="showCropPanel()" class="tool-btn">
+                                <span>✂️</span> 裁剪图片
+                            </button>
+                            <button onclick="showFormatPanel()" class="tool-btn">
+                                <span>🔄</span> 转换格式
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 旋转和翻转 -->
+                    <div class="tool-group">
+                        <h4>🔄 旋转翻转</h4>
+                        <div class="tool-buttons">
+                            <button onclick="rotateImage(-90)" class="tool-btn">
+                                <span>↪️</span> 左旋转90°
+                            </button>
+                            <button onclick="rotateImage(90)" class="tool-btn">
+                                <span>↩️</span> 右旋转90°
+                            </button>
+                            <button onclick="flipImage('horizontal')" class="tool-btn">
+                                <span>↔️</span> 水平翻转
+                            </button>
+                            <button onclick="flipImage('vertical')" class="tool-btn">
+                                <span>↕️</span> 垂直翻转
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 滤镜效果 -->
+                    <div class="tool-group">
+                        <h4>🎨 滤镜效果</h4>
+                        <div class="filter-grid">
+                            <button onclick="applyFilter('none')" class="filter-btn">原图</button>
+                            <button onclick="applyFilter('grayscale')" class="filter-btn">黑白</button>
+                            <button onclick="applyFilter('sepia')" class="filter-btn">怀旧</button>
+                            <button onclick="applyFilter('blur')" class="filter-btn">模糊</button>
+                            <button onclick="applyFilter('brightness')" class="filter-btn">亮度</button>
+                            <button onclick="applyFilter('contrast')" class="filter-btn">对比度</button>
+                            <button onclick="applyFilter('saturate')" class="filter-btn">饱和度</button>
+                            <button onclick="applyFilter('invert')" class="filter-btn">反色</button>
+                        </div>
+                    </div>
+
+                    <!-- 高级调整 -->
+                    <div class="tool-group">
+                        <h4>⚙️ 高级调整</h4>
+                        <div class="adjust-controls">
+                            <label>
+                                <span>亮度:</span>
+                                <input type="range" id="brightness-slider" min="0" max="200" value="100" oninput="adjustBrightness(this.value)">
+                                <span id="brightness-value">100%</span>
+                            </label>
+                            <label>
+                                <span>对比度:</span>
+                                <input type="range" id="contrast-slider" min="0" max="200" value="100" oninput="adjustContrast(this.value)">
+                                <span id="contrast-value">100%</span>
+                            </label>
+                            <label>
+                                <span>饱和度:</span>
+                                <input type="range" id="saturation-slider" min="0" max="200" value="100" oninput="adjustSaturation(this.value)">
+                                <span id="saturation-value">100%</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：预览区域 -->
+                <div class="preview-area">
+                    <!-- 原图预览 -->
+                    <div class="preview-panel">
+                        <h3>原图预览</h3>
+                        <div class="image-container">
+                            <canvas id="original-canvas"></canvas>
+                            <div class="image-info" id="original-info"></div>
+                        </div>
+                    </div>
+
+                    <!-- 处理后预览 -->
+                    <div class="preview-panel">
+                        <h3>处理后预览</h3>
+                        <!-- 进度条 -->
+                        <div id="progress-container" class="progress-container" style="display: none;">
+                            <div class="progress-bar">
+                                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                            </div>
+                            <div id="progress-text" class="progress-text">处理中... 0%</div>
+                        </div>
+                        <div class="image-container">
+                            <canvas id="processed-canvas"></canvas>
+                            <div class="image-info" id="processed-info"></div>
+                        </div>
+                        <div class="download-actions">
+                            <button onclick="downloadImage()" class="download-btn">💾 下载图片</button>
+                            <button onclick="resetImage()" class="reset-btn">🔄 重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 批量处理区域 -->
+        <section class="batch-section" id="batch-section" style="display: none;">
+            <h3>📦 批量处理</h3>
+            <div class="batch-controls">
+                <button onclick="batchCompress()" class="batch-btn">批量压缩</button>
+                <button onclick="batchResize()" class="batch-btn">批量调整尺寸</button>
+                <button onclick="batchConvert()" class="batch-btn">批量转换格式</button>
+            </div>
+            <div class="batch-results" id="batch-results"></div>
+        </section>
+
+        <!-- 模态框：调整尺寸 -->
+        <div id="resize-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('resize-modal')">&times;</span>
+                <h3>调整图片尺寸</h3>
+                <div class="resize-controls">
+                    <label>
+                        宽度 (px): <input type="number" id="resize-width" min="1">
+                    </label>
+                    <label>
+                        高度 (px): <input type="number" id="resize-height" min="1">
+                    </label>
+                    <label>
+                        <input type="checkbox" id="maintain-aspect" checked> 保持宽高比
+                    </label>
+                    <button onclick="applyResize()" class="apply-btn">应用</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模态框：裁剪 -->
+        <div id="crop-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('crop-modal')">&times;</span>
+                <h3>裁剪图片</h3>
+                <div class="crop-controls">
+                    <label>
+                        X坐标: <input type="number" id="crop-x" min="0" value="0">
+                    </label>
+                    <label>
+                        Y坐标: <input type="number" id="crop-y" min="0" value="0">
+                    </label>
+                    <label>
+                        宽度: <input type="number" id="crop-width" min="1" value="100">
+                    </label>
+                    <label>
+                        高度: <input type="number" id="crop-height" min="1" value="100">
+                    </label>
+                    <button onclick="applyCrop()" class="apply-btn">应用裁剪</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模态框：格式转换 -->
+        <div id="format-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('format-modal')">&times;</span>
+                <h3>转换图片格式</h3>
+                <div class="format-options">
+                    <button onclick="convertToFormat('jpeg')" class="format-btn">JPEG</button>
+                    <button onclick="convertToFormat('png')" class="format-btn">PNG</button>
+                    <button onclick="convertToFormat('webp')" class="format-btn">WEBP</button>
+                    <button onclick="convertToFormat('gif')" class="format-btn">GIF</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 图片处理工具 | 免费使用 | <a href="#" onclick="showAbout()">关于我们</a></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
